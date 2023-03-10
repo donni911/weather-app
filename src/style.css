@@ -1,0 +1,24 @@
+/* fonts */
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500&display=swap");
+/*  */
+
+/* base */
+@import "./styles/reset.css";
+@import "./styles/common.css";
+@import "./styles/transitions.css";
+
+/* layout */
+@import "./styles/layout.css";
+
+/* components */
+@import "./styles/components/card.css";
+@import "./styles/components/svg.css";
+@import "./styles/components/input.css";
+@import "./styles/components/header.css";
+@import "./styles/components/counter.css";
+@import "./styles/components/weather.css";
+
+/* pages */
+@import "./styles/pages/main.css";
+@import "./styles/pages/starred.css";

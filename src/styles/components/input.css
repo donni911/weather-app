@@ -1,0 +1,20 @@
+.c-input {
+  padding: 8px 12px;
+  width: 100%;
+
+  font-size: 20px;
+  font-weight: 500;
+
+  background-color: var(--muted);
+
+  border-radius: 8px;
+  border: 1px transparent solid;
+  color: var(--text);
+
+  transition: border-color var(--transition);
+
+  &:focus {
+    border: 1px var(--primary) solid;
+    outline: 0;
+  }
+}
