@@ -27,6 +27,7 @@ export default {
   },
   mounted() {
     this.myChart = chart(this.$refs.myChart, this.weather.list.slice(0, 9));
+
     window.addEventListener("resize", this.redrawChart);
   },
 };

@@ -19,3 +19,19 @@
   opacity: 0;
   transform: scale(0);
 }
+
+.fade-up-enter-from {
+  transform: translateY(-100%);
+}
+
+.fade-up-enter-active,
+.fade-up-leave-active {
+  transition: var(--tansition);
+  transition-property: opacity, transform;
+  transition-delay: 150ms;
+}
+
+.fade-up-enter-from,
+.fade-up-leave-to {
+  opacity: 0;
+}

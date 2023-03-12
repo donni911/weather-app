@@ -29,6 +29,8 @@ html {
 }
 
 body {
+  scrollbar-gutter: stable;
+
   scroll-behavior: smooth;
   margin: 0;
   display: flex;

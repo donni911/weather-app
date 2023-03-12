@@ -60,7 +60,10 @@
   transition-property: width;
 }
 
-.c-main__list {
+.c-main__exclaimer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .c-main__item {

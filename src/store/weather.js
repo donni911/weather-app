@@ -15,6 +15,8 @@ export const weatherStore = defineStore("weatherStore", {
 
     errorMessage: null,
 
+    loadingStatus: false,
+
     menuItems: [
       {
         linkName: "main",
@@ -25,15 +27,30 @@ export const weatherStore = defineStore("weatherStore", {
     ],
   }),
 
+  getters: {
+    starWeather(state) {
+      return state.searchCitiesWeather.filter((city) => city.starred);
+    },
+
+    loading(state) {
+      return state.loadingStatus;
+    },
+
+    citiesWeatherCount(state) {
+      return state.searchCitiesWeather.length;
+    },
+  },
+
   actions: {
     updateErrorMessage(message) {
       this.errorMessage = message;
     },
 
     async getWeatherAction(location) {
-      let weatherInfo = {};
-
       try {
+        let weatherInfo = {};
+        this.loadingStatus = true;
+
         await axiosWeatherClient
           .get(
             `weather?q=${location}` +
@@ -42,11 +59,7 @@ export const weatherStore = defineStore("weatherStore", {
           .then((response) => {
             weatherInfo.temperatureToday = response.data;
           });
-      } catch (error) {
-        this.updateErrorMessage(error.response.data.message);
-      }
 
-      try {
         await axiosWeatherClient
           .get(
             `forecast?q=${location}&units=metric&appid=${
@@ -56,13 +69,15 @@ export const weatherStore = defineStore("weatherStore", {
           .then((response) => {
             weatherInfo.temperatureByHours = response.data;
           });
+
+        this.searchCitiesWeather.push(weatherInfo);
+        localStorage.weatherInCities = JSON.stringify(this.searchCitiesWeather);
       } catch (error) {
         this.updateErrorMessage(error.response.data.message);
+        this.loadingStatus = false;
+      } finally {
+        this.loadingStatus = false;
       }
-
-      this.searchCitiesWeather.push(weatherInfo);
-
-      localStorage.weatherInCities = JSON.stringify(this.searchCitiesWeather);
     },
 
     async getCitiesAction(input) {
@@ -81,6 +96,22 @@ export const weatherStore = defineStore("weatherStore", {
       await axios.get("https://ipapi.co/json/").then((response) => {
         this.currentLocation = response.data;
       });
+    },
+
+    deleteWeatherAction(value) {
+      const valueToDelete = this.searchCitiesWeather
+        .map((el) => el)
+        .indexOf(value);
+      this.searchCitiesWeather.splice(valueToDelete, 1);
+      localStorage.weatherInCities = JSON.stringify(this.searchCitiesWeather);
+    },
+
+    saveWeatherAction(value,isStar) {
+      let starValueFinder = this.searchCitiesWeather.find((el) => el === value);
+      starValueFinder.starred = isStar;
+      console.log(starValueFinder);
+      localStorage.weatherInCities = JSON.stringify(this.searchCitiesWeather);
+
     },
   },
 });

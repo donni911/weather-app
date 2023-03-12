@@ -27,7 +27,6 @@
 }
 
 .c-card__heading {
-  z-index: 10;
   margin-bottom: 16px;
 }
 
@@ -41,7 +40,6 @@
 
 .c-card__main {
   margin-bottom: 24px;
-  z-index: 10;
 }
 
 @media (max-width: 575px) {

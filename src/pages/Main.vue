@@ -53,10 +53,16 @@
           />
         </ul>
         <div
-          v-else-if="!searchCitiesWeather.length && fetchingData"
+          v-else-if="!searchCitiesWeather.length && loading"
           class="c-preloader__wrapper"
         >
           <Loader />
+        </div>
+        <div
+          class="c-main__exclaimer"
+          v-else-if="!searchCitiesWeather.length && !loading"
+        >
+          Looking for a weather?
         </div>
       </transition>
 
@@ -69,11 +75,14 @@
       </div>
     </div>
 
-    <Modal
-      :modalIsOpen="modalIsOpen"
-      @closeModal="closeModal"
-      @modal-confirmed="handleModalConfirmed"
-    />
+    <Modal :modalIsOpen="modalIsOpen" @closeModal="closeModal">
+      <template v-slot:title> Oh ooh... </template>
+      <template v-slot:description>
+        You can add only five(5) blocks ! <br />
+
+        If you want to add a new one, you should delete one that you have.
+      </template>
+    </Modal>
   </section>
 </template>
 
@@ -98,14 +107,14 @@ export default {
     return {
       showList: false,
       searchLocationInput: "",
-      fetchingData: false,
-      modalIsOpen: true,
+      modalIsOpen: false,
     };
   },
 
   computed: {
     ...mapState(weatherStore, [
       "cities",
+      "loading",
       "searchCitiesWeather",
       "currentLocation",
     ]),
@@ -171,25 +180,15 @@ export default {
     const storage = localStorage.getItem("weatherInCities");
 
     if (storage && !this.searchCitiesWeather.length) {
-      try {
-        const parsedStorage = JSON.parse(storage);
-        if (parsedStorage.length) {
-          parsedStorage.forEach(async (el) => {
-            this.fetchingData = true;
-            this.selectLocation(el.temperatureToday.name);
-            this.fetchingData = false;
-          });
-        }
-      } catch (error) {
-        localStorage.removeItem("weatherInCities");
-        console.error(
-          'Invalid JSON string in localStorage. The "weatherInCities" key has been removed.'
-        );
+      const parsedStorage = JSON.parse(storage);
+      if (parsedStorage.length) {
+        parsedStorage.forEach(async (el) => {
+          this.selectLocation(el.temperatureToday.name);
+        });
       }
     } else if (!storage && !this.searchCitiesWeather.length) {
-      this.fetchingData = true;
       await this.getCurrentLocationAction();
-      this.fetchingData = false;
+
       this.selectLocation(this.currentLocation.city);
     }
   },

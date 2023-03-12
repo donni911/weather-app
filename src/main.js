@@ -17,9 +17,9 @@ import {
   faCloudSunRain,
   faSearch,
   faBars,
-  faPlus,
+  faPlus,faTrash,
 } from "@fortawesome/free-solid-svg-icons";
-library.add(faTableList, faStar, faCloudSunRain, faSearch, faBars, faPlus);
+library.add(faTableList, faStar, faCloudSunRain, faSearch, faBars, faPlus,faTrash);
 
 const pinia = createPinia();
 

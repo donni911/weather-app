@@ -10,17 +10,32 @@
       </div>
       {{ item.name }}</router-link
     >
-    <counter :count="3" class="ml-auto z-10" />
+    <counter :count="computedCount" v-if="computedCount" class="ml-auto z-10" />
   </li>
 </template>
 
 <script>
 import Counter from "./Counter.vue";
+import { mapState } from "pinia";
+import { weatherStore } from "../../store/weather";
 
 export default {
   props: ["item"],
   components: {
     Counter,
+  },
+
+  computed: {
+    ...mapState(weatherStore, ["citiesWeatherCount"]),
+
+    computedCount() {
+      switch (this.item.linkName) {
+        case "main":
+          return this.citiesWeatherCount;
+        // case "starred":
+        //   return this.starNotesLength;
+      }
+    },
   },
 };
 </script>
