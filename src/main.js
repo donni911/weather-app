@@ -11,8 +11,15 @@ import { createPinia } from "pinia";
 //icons
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { faTableList, faStar, faCloudSunRain } from "@fortawesome/free-solid-svg-icons";
-library.add(faTableList, faStar, faCloudSunRain);
+import {
+  faTableList,
+  faStar,
+  faCloudSunRain,
+  faSearch,
+  faBars,
+  faPlus,
+} from "@fortawesome/free-solid-svg-icons";
+library.add(faTableList, faStar, faCloudSunRain, faSearch, faBars, faPlus);
 
 const pinia = createPinia();
 

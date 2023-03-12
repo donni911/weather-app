@@ -20,3 +20,8 @@ svg path {
   transition-property: fill;
   fill: var(--primary);
 }
+
+img {
+  width: 100%;
+  height: 100%;
+}

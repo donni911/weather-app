@@ -13,11 +13,13 @@
 
 /* components */
 @import "./styles/components/card.css";
-@import "./styles/components/svg.css";
+@import "./styles/components/image.css";
 @import "./styles/components/input.css";
 @import "./styles/components/header.css";
 @import "./styles/components/counter.css";
 @import "./styles/components/weather.css";
+@import "./styles/components/preloader.css";
+@import "./styles/components/modal.css";
 
 /* pages */
 @import "./styles/pages/main.css";

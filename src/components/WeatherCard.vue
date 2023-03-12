@@ -2,7 +2,7 @@
   <div class="c-card">
     <transition name="fade-scale" mode="out-in">
       <div :key="computedImage" class="c-card__wrap">
-        <img :src="'/' + computedImage" :alt="computedImage" />
+        <img class="c-img" :src="'/' + computedImage" :alt="computedImage" />
       </div>
     </transition>
     <div class="c-card__heading">
@@ -11,7 +11,6 @@
           Weather {{ "in " + weather.name }}
         </h4>
       </transition>
-      <p class="c-card__heading-description">What's the weather</p>
     </div>
     <div class="c-card__main">
       <div class="c-card__main__wrapper">
@@ -35,7 +34,7 @@
       >
     </div>
 
-    <div class="c-card__block">
+    <div class="c-card__block__wrapper">
       <card-sm
         :title="'Pressure'"
         class="c-card__block--primary"

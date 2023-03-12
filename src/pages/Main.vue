@@ -1,50 +1,86 @@
 <template>
   <section class="c-section c-main">
     <div class="c-main__heading">
-      <div class="c-main__search">
-        <input
-          class="c-input"
-          type="text"
-          v-model="searchLocation"
-          @input="getLocations"
-          @keyup.enter="getLocations"
-          @blur="closeList"
-        />
+      <div class="c-main__search" ref="inputWrapper">
+        <div class="c-input__wrapper">
+          <input
+            class="c-input"
+            type="text"
+            v-model="searchLocationInput"
+            @input="getLocations"
+            @blur="closeList"
+            @keyup.enter="getLocations"
+            placeholder="Look for weather in..."
+            @focus="increaseWidthInput"
+            ref="inputSearch"
+          />
+          <button @click="getLocations" class="c-input__btn">
+            <div class="c-svg">
+              <font-awesome-icon icon="fa-solid fa-search" />
+            </div>
+          </button>
+        </div>
         <transition name="fade">
-          <ul v-if="showList" class="c-main__search__list">
+          <ul v-if="showList" class="c-main__search__list" ref="cityList">
+            <template v-if="cities.length">
+              <li
+                v-for="city in cities"
+                :key="city"
+                @click="selectLocation(city.name)"
+                class="c-main__search__list__item"
+              >
+                {{ city.name }}
+              </li>
+            </template>
             <li
-              v-for="city in cities"
-              :key="city"
-              @click="selectLocation(city)"
+              v-else
               class="c-main__search__list__item"
+              style="pointer-events: none"
             >
-              {{ city.name }}
+              No such cities
             </li>
           </ul>
         </transition>
       </div>
-
-      <div class="c-main__action">
-        <button
-          class="c-main__action__save"
-          :class="{ active: isActive }"
-          @click="toggleSave"
+    </div>
+    <div class="c-main__section">
+      <transition mode="out-in" name="fade">
+        <ul class="c-main__list" v-if="searchCitiesWeather.length">
+          <WeatherSection
+            v-for="cityWeather in searchCitiesWeather"
+            :cityWeather="cityWeather"
+            :key="cityWeather.id"
+          />
+        </ul>
+        <div
+          v-else-if="!searchCitiesWeather.length && fetchingData"
+          class="c-preloader__wrapper"
         >
+          <Loader />
+        </div>
+      </transition>
+
+      <div class="c-ghost" v-if="searchCitiesWeather.length < 5">
+        <button class="c-ghost__button" @click="addWeatherCard">
           <div class="c-svg">
-            <font-awesome-icon icon="fa-solid fa-star" />
+            <font-awesome-icon icon="fa-solid fa-plus" />
           </div>
         </button>
       </div>
     </div>
-    <section class="c-main__section">
-      <Weather-Card v-if="searchCityWeather" :weather="searchCityWeather" />
-      <div v-else>{{ errorMessage }}</div>
-    </section>
+
+    <Modal
+      :modalIsOpen="modalIsOpen"
+      @closeModal="closeModal"
+      @modal-confirmed="handleModalConfirmed"
+    />
   </section>
 </template>
 
 <script>
-import WeatherCard from "../components/WeatherCard.vue";
+import WeatherSection from "../components/WeatherSection.vue";
+import Loader from "../components/UI/Loader.vue";
+import Modal from "../components/UI/Modal.vue";
 
 import { debounce } from "../modules/debounce";
 
@@ -53,54 +89,109 @@ import { weatherStore } from "../store/weather.js";
 
 export default {
   components: {
-    WeatherCard,
+    WeatherSection,
+    Loader,
+    Modal,
   },
+
   data() {
     return {
-      isActive: false,
-      searchLocation: "",
       showList: false,
-      error: "",
+      searchLocationInput: "",
+      fetchingData: false,
+      modalIsOpen: true,
     };
   },
 
-  watch: {
-    errorMessage(val) {
-      this.error = val;
-    },
-  },
-
   computed: {
-    ...mapState(weatherStore, ["cities", "searchCityWeather", "errorMessage"]),
+    ...mapState(weatherStore, [
+      "cities",
+      "searchCitiesWeather",
+      "currentLocation",
+    ]),
   },
 
   methods: {
-    ...mapActions(weatherStore, ["getCitiesAction", "getWeatherAction"]),
+    ...mapActions(weatherStore, [
+      "getCitiesAction",
+      "getWeatherAction",
+      "getCurrentLocationAction",
+    ]),
 
-    toggleSave() {
-      this.$data.isActive = !this.$data.isActive;
+    increaseWidthInput() {
+      this.$refs.inputWrapper.style.width = 350 + "px";
+    },
+
+    addWeatherCard() {
+      this.$refs.inputSearch.focus();
     },
 
     closeList() {
-      this.showList = false;
+      this.$refs.inputWrapper.style.width = 250 + "px";
+      this.$data.showList = false;
     },
 
-    selectLocation(location) {
-      this.searchLocation = location.name;
-      this.showList = false;
+    closeModal() {
+      this.modalIsOpen = false;
+    },
 
-      this.getWeatherAction(location);
+    handleModalConfirmed() {},
+
+    selectLocation(location) {
+      this.$data.showList = false;
+
+      if (this.searchCitiesWeather.length > 4) {
+        this.modalIsOpen = true;
+      } else {
+        this.getWeatherAction(location);
+      }
     },
 
     getLocations: debounce(function () {
-      if (this.searchLocation.length > 2) {
-        this.showList = true;
-        this.getCitiesAction(this.searchLocation);
+      if (this.$data.searchLocationInput.length > 2) {
+        this.$data.showList = true;
+        this.getCitiesAction(this.$data.searchLocationInput);
       } else {
-        this.showList = false;
+        this.$data.showList = false;
       }
-      console.log(this.showList);
     }, 300),
+  },
+
+  watch: {
+    modalIsOpen(val) {
+      if (val) {
+        document.body.style.overflow = "hidden";
+      } else {
+        document.body.style.overflow = "";
+      }
+    },
+  },
+
+  async mounted() {
+    const storage = localStorage.getItem("weatherInCities");
+
+    if (storage && !this.searchCitiesWeather.length) {
+      try {
+        const parsedStorage = JSON.parse(storage);
+        if (parsedStorage.length) {
+          parsedStorage.forEach(async (el) => {
+            this.fetchingData = true;
+            this.selectLocation(el.temperatureToday.name);
+            this.fetchingData = false;
+          });
+        }
+      } catch (error) {
+        localStorage.removeItem("weatherInCities");
+        console.error(
+          'Invalid JSON string in localStorage. The "weatherInCities" key has been removed.'
+        );
+      }
+    } else if (!storage && !this.searchCitiesWeather.length) {
+      this.fetchingData = true;
+      await this.getCurrentLocationAction();
+      this.fetchingData = false;
+      this.selectLocation(this.currentLocation.city);
+    }
   },
 };
 </script>

@@ -1,20 +1,39 @@
 .c-input {
+  position: relative;
+
   padding: 8px 12px;
+  padding-right: 36px;
   width: 100%;
 
   font-size: 20px;
   font-weight: 500;
 
-  background-color: var(--muted);
+  background-color: #fff;
 
   border-radius: 8px;
-  border: 1px transparent solid;
+  border: 1px var(--primary) solid;
   color: var(--text);
 
-  transition: border-color var(--transition);
+  transition: var(--transition);
+  transition-property: border-color;
 
   &:focus {
-    border: 1px var(--primary) solid;
+    border: 1px var(--secondary) solid;
     outline: 0;
   }
+}
+.c-input__btn {
+  padding: 8px;
+  margin: -8px;
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(calc(-50% + 8px));
+
+  &:hover .c-svg path {
+    fill: var(--secondary);
+  }
+}
+.c-input__wrapper {
+  position: relative;
 }

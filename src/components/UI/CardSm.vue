@@ -1,10 +1,10 @@
 <template>
-  <div class="bg-white p-4 flex flex-col rounded-xl flex-grow-0 flex-shrink-0">
+  <div class="c-card__block">
     <transition name="fade" mode="out-in">
-      <h4 class="text-center text-xs" :key="title">{{ title }}</h4>
+      <h4 class="c-card__block__heading" :key="title">{{ title }}</h4>
     </transition>
     <transition name="fade" mode="out-in">
-      <span class="text-center text-lg font-bold" :key="description">
+      <span class="c-card__block__description" :key="description">
         {{ description }}</span
       >
     </transition>

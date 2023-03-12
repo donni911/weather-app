@@ -24,7 +24,12 @@
   --transition: 150ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
+  scroll-behavior: smooth;
   margin: 0;
   display: flex;
   min-width: 320px;
@@ -40,8 +45,11 @@ a {
   text-decoration: inherit;
   transition: color var(--transition);
 }
-a:hover {
-  color: var(--secondary);
+
+@media (any-hover: hover) {
+  a:hover {
+    color: var(--secondary);
+  }
 }
 
 h1 {
@@ -60,6 +68,11 @@ button {
 
 #app {
   width: 100%;
+}
+@media (min-width: 576px) {
+  .c-chart {
+    padding: 30px;
+  }
 }
 
 @media (prefers-color-scheme: light) {

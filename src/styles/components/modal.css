@@ -1,0 +1,68 @@
+.c-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.2);
+  z-index: 999;
+}
+
+.c-modal {
+  position: fixed;
+  top: 25%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: white;
+  padding: 20px;
+  z-index: 1000;
+  border-radius: 12px;
+  width: 100%;
+}
+@media (min-width: 768px) {
+  .c-modal {
+    max-width: 500px;
+  }
+}
+.c-modal-title {
+  font-size: 60px;
+  color: var(--secondary);
+  margin-bottom: 16px;
+}
+
+.c-modal-description {
+  margin-bottom: 16px;
+  font-size: 18px;
+}
+
+.c-modal-btn {
+  padding: 12px;
+  color: #000;
+  font-size: 16px;
+
+  border-radius: 8px;
+  border: 2px solid transparent;
+
+  transition: border var(--transition);
+  transition-property: background-color, border, color;
+
+  &:not(:last-child) {
+    margin-right: 8px;
+  }
+}
+
+.c-modal-btn--submit {
+  color: var(--primary);
+  border-color: var(--primary);
+  &:hover {
+    background-color: var(--primary);
+    color: #fff;
+  }
+}
+
+.c-modal-btn--decline {
+  color: var(--secondary);
+  &:hover {
+    border-color: var(--secondary);
+  }
+}

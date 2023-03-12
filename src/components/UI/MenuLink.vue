@@ -1,6 +1,10 @@
 <template>
   <li class="c-header__item">
-    <router-link class="c-header__link" :to="{ name: item.linkName }">
+    <router-link
+      class="c-header__link"
+      @click="$emit('clickEvent')"
+      :to="{ name: item.linkName }"
+    >
       <div class="c-svg">
         <font-awesome-icon :icon="item.icon" />
       </div>
