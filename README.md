@@ -10,7 +10,7 @@ node - v18.12.1
 
 ### Frontend
 
-yarn
-yarn dev - for development
-yarn build - for build.
-yarn build && firebase deploy - deploying app.
+- yarn - install all packages we need
+- yarn dev - for development
+- yarn build - for build.
+- yarn build && firebase deploy - deploying app.
