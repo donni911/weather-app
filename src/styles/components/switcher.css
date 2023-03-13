@@ -1,0 +1,46 @@
+.c-switcher {
+  height: 0;
+  width: 0;
+  visibility: hidden;
+  margin: 0;
+}
+
+.c-switcher__wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.c-switcher__label {
+  cursor: pointer;
+  text-indent: -9999px;
+  width: 50px;
+  height: 24px;
+  background: grey;
+  display: block;
+  border-radius: 100px;
+  position: relative;
+}
+
+.c-switcher__label:after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 5px;
+  width: 18px;
+  height: 18px;
+  background: #fff;
+  border-radius: 50%;
+  transform: translateY(-50%);
+  transition: var(--transition);
+  transition-property: background, transform, left;
+}
+
+.c-switcher:checked + .c-switcher__label {
+  background: var(--secondary);
+}
+
+.c-switcher:checked + .c-switcher__label:after {
+  left: calc(100% - 5px);
+  transform: translate(-100%, -50%);
+  background-color: var(--muted);
+}

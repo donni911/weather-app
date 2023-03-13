@@ -7,3 +7,10 @@ This template should help get you started developing with Vue 3 in Vite. The tem
 - [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
 
 node - v18.12.1
+
+### Frontend
+
+yarn
+yarn dev - for development
+yarn build - for build.
+yarn build && firebase deploy - deploying app.
