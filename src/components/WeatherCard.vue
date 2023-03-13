@@ -5,6 +5,13 @@
         <img class="c-img" :src="'/' + computedImage" :alt="computedImage" />
       </div>
     </transition>
+    <div class="c-card__date">
+      <transition name="fade" mode="out-in">
+        <h4 class="c-card__heading-heading" :key="weather.name">
+          Weather as of {{ computedTime }}
+        </h4>
+      </transition>
+    </div>
     <div class="c-card__heading">
       <transition name="fade" mode="out-in">
         <h4 class="c-card__heading-heading" :key="weather.name">
@@ -56,6 +63,7 @@
 
 <script>
 import CardSm from "./UI/CardSm.vue";
+import { computedWeatherTime } from "../modules/getTime";
 
 export default {
   components: {
@@ -82,6 +90,9 @@ export default {
         default:
           return "cloud.png";
       }
+    },
+    computedTime() {
+      return computedWeatherTime(this.weather);
     },
   },
 };

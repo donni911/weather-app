@@ -1,6 +1,5 @@
 <template>
   <div>
-    <button @click="showModal = true">Open Modal</button>
     <transition name="fade">
       <div v-if="modalIsOpen">
         <div class="c-modal-overlay" @click="closeModal"></div>

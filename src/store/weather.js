@@ -11,11 +11,11 @@ export const weatherStore = defineStore("weatherStore", {
     cities: [],
     searchCitiesWeather: [],
 
-    currentLocation: null,
-
     errorMessage: null,
 
     loadingStatus: false,
+
+    currentLocation: null,
 
     menuItems: [
       {
@@ -39,6 +39,10 @@ export const weatherStore = defineStore("weatherStore", {
     citiesWeatherCount(state) {
       return state.searchCitiesWeather.length;
     },
+
+    citiesStarWeatherCount(state) {
+      return state.searchCitiesWeather.filter((city) => city.starred).length;
+    },
   },
 
   actions: {
@@ -47,13 +51,23 @@ export const weatherStore = defineStore("weatherStore", {
     },
 
     async getWeatherAction(location) {
+      let locationName;
+      let weatherInfo;
+
+      if (typeof location == "object") {
+        locationName = location.temperatureToday.name;
+        weatherInfo = location;
+      } else {
+        locationName = location;
+        weatherInfo = {};
+      }
+
       try {
-        let weatherInfo = {};
         this.loadingStatus = true;
 
         await axiosWeatherClient
           .get(
-            `weather?q=${location}` +
+            `weather?q=${locationName}` +
               `&units=metric&appid=${import.meta.env.VITE_WEATHER_API_KEY}`
           )
           .then((response) => {
@@ -62,7 +76,7 @@ export const weatherStore = defineStore("weatherStore", {
 
         await axiosWeatherClient
           .get(
-            `forecast?q=${location}&units=metric&appid=${
+            `forecast?q=${locationName}&units=metric&appid=${
               import.meta.env.VITE_WEATHER_API_KEY
             }`
           )
@@ -70,8 +84,8 @@ export const weatherStore = defineStore("weatherStore", {
             weatherInfo.temperatureByHours = response.data;
           });
 
-        this.searchCitiesWeather.push(weatherInfo);
-        localStorage.weatherInCities = JSON.stringify(this.searchCitiesWeather);
+        this.searchCitiesWeather.unshift(weatherInfo);
+        this.updateLocalStorage();
       } catch (error) {
         this.updateErrorMessage(error.response.data.message);
         this.loadingStatus = false;
@@ -103,15 +117,14 @@ export const weatherStore = defineStore("weatherStore", {
         .map((el) => el)
         .indexOf(value);
       this.searchCitiesWeather.splice(valueToDelete, 1);
-      localStorage.weatherInCities = JSON.stringify(this.searchCitiesWeather);
+      this.updateLocalStorage();
     },
 
-    saveWeatherAction(value,isStar) {
-      let starValueFinder = this.searchCitiesWeather.find((el) => el === value);
-      starValueFinder.starred = isStar;
-      console.log(starValueFinder);
+    updateLocalStorage() {
       localStorage.weatherInCities = JSON.stringify(this.searchCitiesWeather);
-
+      if (JSON.parse(localStorage.weatherInCities).length === 0) {
+        localStorage.removeItem("weatherInCities");
+      }
     },
   },
 });

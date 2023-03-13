@@ -1,83 +1,94 @@
 import Chart from "chart.js/auto";
+import { formatTime } from "./getTime";
+class ChartJS {
+  constructor(canvasRef, data) {
+    this.labels = [];
+    this.dayTemperature = [];
 
-const formatTime = (time) => {
-  let hours = new Date(time).getHours();
-  let ampm = hours >= 12 ? "PM" : "AM";
-  hours = hours % 12;
-  hours = hours ? hours : 12;
-  let strTime = hours + " " + ampm;
-  return strTime;
-};
+    data.forEach((el) => {
+      this.dayTemperature.push(Math.round(el.main.temp));
+      this.labels.push(formatTime(el.dt_txt));
+    });
 
-const chart = (el, data) => {
-  const labels = [];
-  const dayTemperature = [];
+    this.canvas = canvasRef;
+    this.ctx = this.canvas.getContext("2d");
+    this.chart = new Chart(this.ctx, {
+      type: "line",
+      data: {
+        labels: this.labels,
+        showTooltips: false,
+        datasets: [
+          {
+            data: this.dayTemperature,
 
-  data.forEach((el) => {
-    dayTemperature.push(Math.round(el.main.temp));
-    labels.push(formatTime(el.dt_txt));
-  });
+            borderColor: "#83c5be",
+            tension: 0.1,
 
-  new Chart(el, {
-    type: "line",
+            pointRadius: 8,
+            pointHoverRadius: 6,
+            pointHitRadius: 30,
 
-    data: {
-      labels: labels,
-      showTooltips: false,
-      datasets: [
-        {
-          data: dayTemperature,
-
-          borderColor: "#83c5be",
-          tension: 0.1,
-
-          pointRadius: 8,
-          pointHoverRadius: 6,
-          pointHitRadius: 30,
-
-          backgroundColor: "#83c5be",
-        },
-      ],
-    },
-    options: {
-      interaction: {
-        intersect: false,
-        mode: "index",
+            backgroundColor: "#83c5be",
+          },
+        ],
       },
-      plugins: {
-        legend: {
-          display: false,
+      options: {
+        interaction: {
+          intersect: false,
+          mode: "index",
         },
+        plugins: {
+          legend: {
+            display: false,
+          },
 
-        title: {
-          display: true,
-          text: "Day Temperature",
-          color: "#000",
-        },
+          title: {
+            display: true,
+            text: "Day Temperature",
+            color: "#000",
+          },
 
-        tooltip: {
-          xAlign: "center",
-          yAlign: "bottom",
-          titleAlign: "center",
-          bodyAlign: "center",
-          backgroundColor: "#006d77",
-          displayColors: false,
-          titleSpacing: 3,
-          callbacks: {
-            label: function (context) {
-              return context.formattedValue + " C°";
+          tooltip: {
+            xAlign: "center",
+            yAlign: "bottom",
+            titleAlign: "center",
+            bodyAlign: "center",
+            backgroundColor: "#006d77",
+            displayColors: false,
+            titleSpacing: 3,
+            callbacks: {
+              label: function (context) {
+                return context.formattedValue + " C°";
+              },
             },
           },
         },
-      },
-      scales: {
-        y: {
-          display: false,
-          beginAtZero: true,
+        scales: {
+          y: {
+            display: false,
+            beginAtZero: true,
+          },
         },
       },
-    },
-  });
-};
+    });
 
-export default chart;
+    window.addEventListener("resize", this.handleResize);
+  }
+
+  handleResize = () => {
+    if (this.chart) {
+      this.chart.resize();
+    }
+  };
+
+  updateData(newData) {
+    this.chart.data.datasets[0].data = newData;
+    this.chart.update();
+  }
+
+  destroy() {
+    this.chart.destroy();
+  }
+}
+
+export default ChartJS;

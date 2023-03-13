@@ -26,14 +26,14 @@ export default {
   },
 
   computed: {
-    ...mapState(weatherStore, ["citiesWeatherCount"]),
+    ...mapState(weatherStore, ["citiesWeatherCount", "citiesStarWeatherCount"]),
 
     computedCount() {
       switch (this.item.linkName) {
         case "main":
           return this.citiesWeatherCount;
-        // case "starred":
-        //   return this.starNotesLength;
+        case "starred":
+          return this.citiesStarWeatherCount;
       }
     },
   },

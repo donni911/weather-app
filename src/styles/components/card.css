@@ -8,6 +8,12 @@
   overflow: hidden;
 }
 
+.c-card__date {
+  font-size: 12px;
+  font-style: italic;
+  margin-bottom: 8px;
+}
+
 .c-card__wrap {
   position: absolute;
   top: 0;

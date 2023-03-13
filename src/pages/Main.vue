@@ -112,12 +112,7 @@ export default {
   },
 
   computed: {
-    ...mapState(weatherStore, [
-      "cities",
-      "loading",
-      "searchCitiesWeather",
-      "currentLocation",
-    ]),
+    ...mapState(weatherStore, ["cities", "loading", "searchCitiesWeather"]),
   },
 
   methods: {
@@ -144,8 +139,6 @@ export default {
       this.modalIsOpen = false;
     },
 
-    handleModalConfirmed() {},
-
     selectLocation(location) {
       this.$data.showList = false;
 
@@ -153,6 +146,7 @@ export default {
         this.modalIsOpen = true;
       } else {
         this.getWeatherAction(location);
+        this.searchLocationInput = "";
       }
     },
 
@@ -174,23 +168,6 @@ export default {
         document.body.style.overflow = "";
       }
     },
-  },
-
-  async mounted() {
-    const storage = localStorage.getItem("weatherInCities");
-
-    if (storage && !this.searchCitiesWeather.length) {
-      const parsedStorage = JSON.parse(storage);
-      if (parsedStorage.length) {
-        parsedStorage.forEach(async (el) => {
-          this.selectLocation(el.temperatureToday.name);
-        });
-      }
-    } else if (!storage && !this.searchCitiesWeather.length) {
-      await this.getCurrentLocationAction();
-
-      this.selectLocation(this.currentLocation.city);
-    }
   },
 };
 </script>

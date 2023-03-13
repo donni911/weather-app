@@ -1,34 +1,33 @@
 <template>
   <div class="c-chart">
-    <canvas ref="myChart"></canvas>
+    <canvas ref="chart"></canvas>
   </div>
 </template>
 
 <script>
-import chart from "../modules/chart";
-import { getTime } from "../modules/getTime";
+import ChartJS from "../modules/chart";
 export default {
   props: ["weather"],
+
   data() {
     return {
       myChart: null,
     };
   },
+
   methods: {
-    computedTime(value) {
-      return getTime(value);
-    },
-    redrawChart() {
-      if (this.myChart) {
-        this.myChart.destroy();
-      }
-      this.myChart = chart(this.$refs.myChart, this.weather.list.slice(0, 9));
+    updateChart() {
+      const newData = [30, 40, 50, 60, 70];
+      this.myChart.updateData(newData);
     },
   },
-  mounted() {
-    this.myChart = chart(this.$refs.myChart, this.weather.list.slice(0, 9));
 
-    window.addEventListener("resize", this.redrawChart);
+  mounted() {
+    this.myChart = new ChartJS(this.$refs.chart, this.weather.list.slice(0, 9));
+  },
+
+  beforeDestroy() {
+    this.myChart.destroy();
   },
 };
 </script>

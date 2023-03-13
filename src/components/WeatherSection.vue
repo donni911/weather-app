@@ -1,15 +1,19 @@
 <template>
-  <li class="c-main__item" :class="{ active: isActive }">
+  <li class="c-main__item" :class="{ active: cityWeather.starred }">
     <transition name="fade">
       <div class="c-main__action" v-show="cityWeather">
-        <button class="c-main__action__save" @click="deleteItem">
+        <button
+          class="c-main__action__save"
+          @click="deleteItem"
+          v-show="!isStarPage"
+        >
           <div class="c-svg">
             <font-awesome-icon icon="fa-solid fa-trash" />
           </div>
         </button>
         <button
           class="c-main__action__save"
-          :class="{ active: isActive }"
+          :class="{ active: cityWeather.starred }"
           @click="toggleSave"
         >
           <div class="c-svg">
@@ -53,17 +57,18 @@ export default {
     Modal,
   },
 
+  inject: ["isStarPage"],
+
   props: ["cityWeather"],
 
   data() {
     return {
-      isActive: false,
       modalIsOpen: false,
     };
   },
 
   methods: {
-    ...mapActions(weatherStore, ["deleteWeatherAction", "saveWeatherAction"]),
+    ...mapActions(weatherStore, ["deleteWeatherAction", "updateLocalStorage"]),
 
     deleteItem() {
       this.modalIsOpen = true;
@@ -74,8 +79,9 @@ export default {
     },
 
     toggleSave() {
-      this.$data.isActive = !this.$data.isActive;
-      this.saveWeatherAction(this.cityWeather, this.$data.isActive);
+      this.cityWeather.starred = !this.cityWeather.starred;
+
+      this.updateLocalStorage();
     },
   },
 };
