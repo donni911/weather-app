@@ -1,17 +1,20 @@
 import Chart from "chart.js/auto";
-import { formatTime } from "./getTime";
+import { formatTime, formatDate } from "./getTime";
 class ChartJS {
-  constructor(canvasRef, data) {
+  constructor(canvasRef, data, days = false) {
     this.labels = [];
     this.dayTemperature = [];
 
     data.forEach((el) => {
       this.dayTemperature.push(Math.round(el.main.temp));
-      this.labels.push(formatTime(el.dt_txt));
+      if (!days) {
+        this.labels.push(formatTime(el.dt_txt));
+      } else {
+        this.labels.push(formatDate(el.dt_txt));
+      }
     });
 
-    this.canvas = canvasRef;
-    this.ctx = this.canvas.getContext("2d");
+    this.ctx = canvasRef.getContext("2d");
     this.chart = new Chart(this.ctx, {
       type: "line",
       data: {
@@ -33,6 +36,7 @@ class ChartJS {
         ],
       },
       options: {
+        animation: false,
         interaction: {
           intersect: false,
           mode: "index",
@@ -80,9 +84,19 @@ class ChartJS {
       this.chart.resize();
     }
   };
-
-  updateData(newData) {
-    this.chart.data.datasets[0].data = newData;
+  updateData(newData, days = false) {
+    const dayTemperature = [];
+    const labels = [];
+    newData.forEach((el) => {
+      dayTemperature.push(Math.round(el.main.temp));
+      if (!days) {
+        labels.push(formatTime(el.dt_txt));
+      } else {
+        labels.push(formatDate(el.dt_txt));
+      }
+    });
+    this.chart.data.datasets[0].data = dayTemperature;
+    this.chart.data.labels = labels;
     this.chart.update();
   }
 

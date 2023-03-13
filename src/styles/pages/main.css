@@ -12,6 +12,11 @@
   margin-bottom: 12px;
   display: flex;
   justify-content: end;
+  gap: 16px;
+}
+
+.c-main__exclaimer {
+  text-align: center;
 }
 
 .c-main__action__save {
@@ -60,23 +65,18 @@
   transition-property: width;
 }
 
-.c-main__exclaimer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .c-main__item {
   padding: 8px;
 
   border: 1px solid var(--primary);
   border-radius: 12px;
 
-  transition: border-color var(--transition);
+  transition: var(--transition);
+  transition-property: box-shadow border-color;
 
   &.active {
-    border-color: var(--secondary);
-    box-shadow: 0px 0px 3px var(--secondary);
+    border-color: var(--primary);
+    box-shadow: 0px 0px 5px 3px var(--primary);
   }
 
   &:not(:last-child) {

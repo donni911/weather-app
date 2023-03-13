@@ -17,3 +17,10 @@ export const formatTime = (time) => {
   let strTime = hours + " " + ampm;
   return strTime;
 };
+
+export const formatDate = (date) => {
+  return new Date(date).toLocaleString("en-GB", {
+    day: "numeric",
+    month: "short",
+  })
+};

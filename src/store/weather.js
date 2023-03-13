@@ -82,6 +82,10 @@ export const weatherStore = defineStore("weatherStore", {
           )
           .then((response) => {
             weatherInfo.temperatureByHours = response.data;
+
+            weatherInfo.temperatureByWeek = this.computedWeatherWeek(
+              response.data
+            );
           });
 
         this.searchCitiesWeather.unshift(weatherInfo);
@@ -92,6 +96,35 @@ export const weatherStore = defineStore("weatherStore", {
       } finally {
         this.loadingStatus = false;
       }
+    },
+
+    computedWeatherWeek(data) {
+      const dailyData = data.list.reduce((acc, item) => {
+        const date = new Date(item.dt * 1000);
+        const day = date.toDateString();
+
+        if (!acc[day]) {
+          acc[day] = [];
+        }
+
+        acc[day].push(item);
+        return acc;
+      }, {});
+
+      const avgTemps = Object.values(dailyData).map((items) => {
+        const totalTemp = items.reduce((acc, item) => acc + item.main.temp, 0);
+
+        const averageTemp = totalTemp / items.length;
+        const date = items[0].dt_txt;
+
+        return {
+          dt_txt: date,
+          main: {
+            temp: Math.round(averageTemp),
+          },
+        };
+      });
+      return avgTemps;
     },
 
     async getCitiesAction(input) {

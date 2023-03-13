@@ -1898,9 +1898,9 @@ finalhandler@1.2.0:
     statuses "2.0.1"
     unpipe "~1.0.0"
 
-firebase-tools@^11.24.0:
+firebase-tools@^11.24.1:
   version "11.24.1"
-  resolved "https://registry.npmjs.org/firebase-tools/-/firebase-tools-11.24.1.tgz"
+  resolved "https://registry.yarnpkg.com/firebase-tools/-/firebase-tools-11.24.1.tgz#bc0f23f75f6950f8e68326692502dbee883f04ff"
   integrity sha512-X9p15dZLaR3jbMKvtQgj364khq9EEeC3+PXK0Bo8lwe0XasFmq3d5XsD7XS+a5iziCC7sqzhIiuiUfn5yjYgAg==
   dependencies:
     "@google-cloud/pubsub" "^3.0.1"

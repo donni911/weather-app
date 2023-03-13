@@ -27,8 +27,9 @@
       :weather="cityWeather.temperatureToday"
     />
     <Weather-Graph
-      v-if="cityWeather.temperatureByHours"
-      :weather="cityWeather.temperatureByHours"
+      v-if="cityWeather.temperatureByHours && cityWeather.temperatureByWeek"
+      :weather="cityWeather"
+      :isFiveDays="isFiveDays"
     />
   </li>
 
@@ -57,14 +58,29 @@ export default {
     Modal,
   },
 
-  inject: ["isStarPage"],
+  props: ["cityWeather", "isFiveDays"],
 
-  props: ["cityWeather"],
+  inject: {
+    isStarPage: {
+      type: Boolean,
+      default: false,
+    },
+  },
 
   data() {
     return {
       modalIsOpen: false,
     };
+  },
+
+  watch: {
+    modalIsOpen(val) {
+      if (val) {
+        document.body.style.overflow = "hidden";
+      } else {
+        document.body.style.overflow = "";
+      }
+    },
   },
 
   methods: {

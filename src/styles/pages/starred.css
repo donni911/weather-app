@@ -1,0 +1,23 @@
+.c-starred__exclaimer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.c-starred__heading {
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.c-starred__block {
+  /* display: flex;
+  align-items: center; */
+  margin-bottom: 12px;
+}
+
+.c-starred__switcher {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}

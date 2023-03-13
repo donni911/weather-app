@@ -29,7 +29,7 @@
                 @click="selectLocation(city.name)"
                 class="c-main__search__list__item"
               >
-                {{ city.name }}
+                {{ city.name + " " + city.country }}
               </li>
             </template>
             <li

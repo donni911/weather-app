@@ -6,8 +6,9 @@
 
 <script>
 import ChartJS from "../modules/chart";
+
 export default {
-  props: ["weather"],
+  props: ["weather", "isFiveDays"],
 
   data() {
     return {
@@ -15,15 +16,51 @@ export default {
     };
   },
 
+  watch: {
+    isFiveDays: function (newValue) {
+      if (this.myChart) {
+        this.myChart.destroy();
+      }
+
+      if (this.$refs.chart) {
+        if (newValue) {
+          this.updateChart("week");
+        } else {
+          this.updateChart("day");
+        }
+      }
+    },
+  },
+
   methods: {
-    updateChart() {
-      const newData = [30, 40, 50, 60, 70];
-      this.myChart.updateData(newData);
+    updateChart(val) {
+      switch (val) {
+        case "week":
+          return (this.myChart = new ChartJS(
+            this.$refs.chart,
+            this.weather.temperatureByWeek,
+            true
+          ));
+        case "day":
+          return (this.myChart = new ChartJS(
+            this.$refs.chart,
+            this.weather.temperatureByHours.list.slice(0, 9)
+          ));
+        default:
+          return (this.myChart = new ChartJS(
+            this.$refs.chart,
+            this.weather.temperatureByHours.list.slice(0, 9)
+          ));
+      }
     },
   },
 
   mounted() {
-    this.myChart = new ChartJS(this.$refs.chart, this.weather.list.slice(0, 9));
+    if (this.isFiveDays) {
+      this.updateChart("week");
+    } else {
+      this.updateChart("day");
+    }
   },
 
   beforeDestroy() {

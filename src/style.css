@@ -20,6 +20,7 @@
 @import "./styles/components/weather.css";
 @import "./styles/components/preloader.css";
 @import "./styles/components/modal.css";
+@import "./styles/components/switcher.css";
 
 /* pages */
 @import "./styles/pages/main.css";
